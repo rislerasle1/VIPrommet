@@ -1,37 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="no">
 <head>
-<meta charset="UTF-8">
-<title>Infoskjerm</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-    background: #002b5c;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 50px;
-}
+  <title>Hasle-Løren Infoskjerm</title>
 
-h1 {
-    font-size: 60px;
-}
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: white;
+    }
 
-p {
-    font-size: 30px;
-}
-</style>
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      opacity: 0;
+      visibility: hidden;
+    }
 
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Hasle-Løren Ishockey</h1>
+  <iframe class="slide active" src="side1.html"></iframe>
+  <iframe class="slide" src="side2.html"></iframe>
+  <iframe class="slide" src="side3.html"></iframe>
 
-<p>Velkommen til infoskjermen</p>
+  <script>
+    const slides = document.querySelectorAll(".slide");
 
-<p>Sist oppdatert: 02.09.2026</p>
+    let currentSlide = 0;
+
+    setInterval(() => {
+
+      slides[currentSlide].classList.remove("active");
+
+      currentSlide++;
+
+      if (currentSlide >= slides.length) {
+        currentSlide = 0;
+      }
+
+      slides[currentSlide].classList.add("active");
+
+    }, 5000);
+  </script>
 
 </body>
 </html>
