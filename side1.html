@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiosken åpner</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+  body{
+    background:#ecf5fc;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .rink{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(90deg,
+        transparent 0 16.5%, #1c5596 16.5% 16.9%, transparent 16.9% 49.7%,
+        #cd1e2d 49.7% 50.3%, transparent 50.3% 83.1%,
+        #1c5596 83.1% 83.5%, transparent 83.5% 100%);
+  }
+  .rink:after{
+    content:"";
+    position:absolute;
+    width:18vw;height:18vw;max-width:190px;max-height:190px;
+    border:5px solid #cd1e2d;border-radius:50%;
+    left:50%;top:50%;transform:translate(-50%,-50%);
+  }
+
+  .header{
+    position:absolute;top:0;left:0;right:0;height:8vh;min-height:56px;
+    background:#122a49;color:white;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:clamp(20px,2.4vw,34px);letter-spacing:.08em;
+  }
+
+  .kiosk{
+    position:relative;
+    width:min(58vw,620px);
+    height:min(58vh,350px);
+    min-width:520px;
+    background:#fff;
+    border:6px solid #122a49;
+    border-radius:24px;
+    box-shadow:0 18px 55px rgba(18,42,73,.18);
+  }
+
+  .canopy{
+    position:absolute;left:5%;right:5%;top:-12%;
+    height:17%;
+    min-height:58px;
+    border-radius:18px;
+    background:#cd1e2d;color:white;
+    display:flex;align-items:center;justify-content:center;
+    font-size:clamp(28px,4vw,52px);font-weight:900;
+    letter-spacing:.04em;
+  }
+
+  .window{
+    position:absolute;left:7%;right:7%;top:14%;bottom:7%;
+    border-radius:12px;background:#f5f8fb;overflow:hidden;
+  }
+
+  .inside{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.35em;
+  }
+
+  .title,.date,.sub,.snack{opacity:0}
+  .title{
+    font-size:clamp(28px,4vw,54px);font-weight:900;color:#cd1e2d;
+    animation:titleIn 5s infinite;
+  }
+  .date{
+    font-size:clamp(38px,5vw,68px);font-weight:900;color:#122a49;
+    animation:dateIn 5s infinite;
+  }
+  .sub{
+    font-size:clamp(18px,2vw,28px);font-weight:800;color:#122a49;
+    animation:subIn 5s infinite;
+  }
+  .snack{
+    font-size:clamp(28px,3.3vw,48px);
+    animation:snackIn 5s infinite;
+  }
+
+  .shutter{
+    position:absolute;left:0;right:0;top:0;height:100%;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        #cd1e2d 0 14px,
+        #9b1723 14px 17px
+      );
+    border-bottom:12px solid #122a49;
+    animation:shutterOpen 5s infinite;
+    z-index:5;
+  }
+
+  .puck{
+    position:absolute;
+    width:70px;height:34px;border-radius:50%;
+    background:#151519;
+    left:-100px;top:67%;
+    box-shadow:0 8px 15px rgba(0,0,0,.22);
+    animation:puckShot 5s infinite;
+    z-index:8;
+  }
+  .puck:after{
+    content:"";position:absolute;left:-100px;top:12px;width:80px;height:6px;
+    background:linear-gradient(90deg,transparent,#8e99a3);
+    border-radius:10px;
+  }
+
+  .impact{
+    position:absolute;left:43%;top:69%;width:95px;height:95px;
+    transform:translate(-50%,-50%);
+    opacity:0;z-index:7;
+    background:
+      conic-gradient(from 0deg,
+        #edbd23 0 4deg, transparent 4deg 34deg,
+        #edbd23 34deg 38deg, transparent 38deg 72deg,
+        #edbd23 72deg 76deg, transparent 76deg 110deg,
+        #edbd23 110deg 114deg, transparent 114deg 150deg,
+        #edbd23 150deg 154deg, transparent 154deg 360deg);
+    -webkit-mask:radial-gradient(circle, transparent 0 35%, #000 36%);
+    mask:radial-gradient(circle, transparent 0 35%, #000 36%);
+    animation:impactFlash 5s infinite;
+  }
+
+  .confetti span{
+    position:absolute;top:-10%;width:10px;height:20px;border-radius:2px;
+    opacity:0;z-index:10;
+    animation:confettiFall 5s infinite linear;
+  }
+  .confetti span:nth-child(1){left:13%;background:#cd1e2d;animation-delay:.0s}
+  .confetti span:nth-child(2){left:22%;background:#122a49;animation-delay:.18s}
+  .confetti span:nth-child(3){left:33%;background:#efbd20;animation-delay:.05s}
+  .confetti span:nth-child(4){left:45%;background:#cd1e2d;animation-delay:.28s}
+  .confetti span:nth-child(5){left:56%;background:#122a49;animation-delay:.12s}
+  .confetti span:nth-child(6){left:67%;background:#efbd20;animation-delay:.32s}
+  .confetti span:nth-child(7){left:78%;background:#cd1e2d;animation-delay:.08s}
+  .confetti span:nth-child(8){left:88%;background:#122a49;animation-delay:.22s}
+
+  @keyframes puckShot{
+    0%{left:-100px;transform:translateY(0) rotate(0)}
+    5.3%{left:40%;transform:translateY(-45px) rotate(220deg)}
+    6.5%{left:43%;transform:translateY(-40px) rotate(250deg)}
+    8%,100%{left:43%;transform:translateY(-40px) rotate(250deg);opacity:0}
+  }
+
+  @keyframes impactFlash{
+    0%,5%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+    6%{opacity:1;transform:translate(-50%,-50%) scale(1.25)}
+    8%,100%{opacity:0}
+  }
+
+  @keyframes shutterOpen{
+    0%,6%{height:100%}
+    13%{height:6%}
+    33%,98%{height:6%}
+    99%,100%{height:100%}
+  }
+
+  @keyframes titleIn{
+    0%,11%{opacity:0;transform:translateY(38px) scale(.75)}
+    17%{opacity:1;transform:translateY(0) scale(1.08)}
+    20%,97%{opacity:1;transform:none}
+    98%,100%{opacity:0}
+  }
+
+  @keyframes dateIn{
+    0%,15%{opacity:0;transform:scale(.65)}
+    22%{opacity:1;transform:scale(1.12)}
+    25%,97%{opacity:1;transform:scale(1)}
+    98%,100%{opacity:0}
+  }
+
+  @keyframes snackIn{
+    0%,19%{opacity:0;transform:translateY(35px)}
+    25%,97%{opacity:1;transform:translateY(0)}
+    98%,100%{opacity:0}
+  }
+
+  @keyframes subIn{
+    0%,22%{opacity:0}
+    29%,97%{opacity:1}
+    98%,100%{opacity:0}
+  }
+
+  @keyframes confettiFall{
+    0%,20%{top:-10%;opacity:0;transform:rotate(0)}
+    22%{opacity:1}
+    33%{top:105%;opacity:1;transform:rotate(420deg)}
+    34%,100%{opacity:0}
+  }
+
+  @media (max-width:700px){
+    .kiosk{min-width:88vw;width:88vw}
+  }
+</style>
+</head>
+<body>
+  <div class="rink"></div>
+  <div class="header">HASLE-LØREN</div>
+
+  <div class="kiosk">
+    <div class="canopy">KIOSK</div>
+    <div class="window">
+      <div class="inside">
+        <div class="title">KIOSKEN ÅPNER</div>
+        <div class="date">7. SEPTEMBER</div>
+        <div class="snack">🍿 &nbsp; 🥤</div>
+        <div class="sub">Vi gleder oss!</div>
+      </div>
+      <div class="shutter"></div>
+    </div>
+  </div>
+
+  <div class="puck"></div>
+  <div class="impact"></div>
+
+  <div class="confetti">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+</body>
+</html>
