@@ -36,11 +36,31 @@
 
 <body>
 
-  <iframe class="slide active" src="side1.html"></iframe>
-  <iframe class="slide" src="side2.html"></iframe>
-  <iframe class="slide" src="side3.html"></iframe>
+  <iframe class="slide active" id="side1"></iframe>
+
+  <iframe class="slide" id="side2"></iframe>
+
+  <iframe class="slide" id="side3"></iframe>
+
 
   <script>
+
+    // Én versjon per innlasting.
+    // Gjør at vi får ferskt innhold når siden oppdateres,
+    // men ikke henter data ved hver rotasjon.
+    const version = Date.now();
+
+    document.getElementById("side1").src =
+      "side1.html?v=" + version;
+
+    document.getElementById("side2").src =
+      "https://docs.google.com/spreadsheets/d/1u-Uobmn4ogPwt9qcqFG272O6tlxlRR_oZ2cjh2VpCYo/htmlview?v=" + version;
+
+    document.getElementById("side3").src =
+      "side3.html?v=" + version;
+
+
+    // ROTASJON
     const slides = document.querySelectorAll(".slide");
 
     let currentSlide = 0;
@@ -58,6 +78,17 @@
       slides[currentSlide].classList.add("active");
 
     }, 5000);
+
+
+    // OPPDATER ALT HVER 30. MINUTT
+    setTimeout(() => {
+
+      window.location.replace(
+        window.location.pathname + "?refresh=" + Date.now()
+      );
+
+    }, 1800000);
+
   </script>
 
 </body>
