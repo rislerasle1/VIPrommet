@@ -1,133 +1,145 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="no">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kiosken åpner</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kiosken status</title>
 <style>
-  * { box-sizing: border-box; }
-
-  html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #ffffff;
+  :root{
+    --bg:#f6f8fb;
+    --ink:#112f4a;
+    --red:#ef3e36;
+    --muted:#708394;
   }
-
-  body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(180deg,#f8fbfe 0%, #eef4f8 100%);
+    color:var(--ink);
   }
-
-  .topbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 12px;
-    background: #c8102e;
+  .screen{
+    position:relative;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:4vh 4vw;
   }
-
-  .content {
-    text-align: center;
-    padding: 24px 40px 36px;
+  .panel{
+    width:min(1000px,92vw);
+    text-align:center;
   }
-
-  .logo {
-    display: block;
-    max-width: min(220px, 28vw);
-    max-height: 110px;
-    width: auto;
-    height: auto;
-    margin: 0 auto 18px;
-    object-fit: contain;
+  .headline{
+    min-height:1.4em;
+    margin-bottom:1.6vh;
+    font-size:clamp(28px,3.5vw,58px);
+    line-height:1.05;
+    font-weight:900;
+    color:var(--red);
+    letter-spacing:.01em;
   }
-
-  .kiosk {
-    display: inline-block;
-    padding: 10px 24px;
-    margin-bottom: 24px;
-    border-radius: 10px;
-    background: #c8102e;
-    color: white;
-    font-size: clamp(22px, 2.5vw, 34px);
-    font-weight: 900;
-    letter-spacing: 0.08em;
+  .clock{
+    font-size:clamp(82px,16vw,220px);
+    line-height:0.95;
+    font-weight:900;
+    color:var(--ink);
+    letter-spacing:.02em;
   }
-
-  h1 {
-    margin: 0;
-    color: #17324d;
-    font-size: clamp(48px, 7vw, 96px);
-    line-height: 1.05;
-    font-weight: 900;
-    opacity: 0;
-    animation: titleIn 5s infinite;
+  .subtext{
+    min-height:1.3em;
+    margin-top:1.8vh;
+    font-size:clamp(24px,3vw,48px);
+    line-height:1.15;
+    font-weight:800;
+    color:var(--ink);
   }
-
-  .date {
-    margin-top: 20px;
-    color: #c8102e;
-    font-size: clamp(46px, 6.5vw, 86px);
-    line-height: 1;
-    font-weight: 900;
-    opacity: 0;
-    animation: dateIn 5s infinite;
+  .date{
+    margin-top:1.4vh;
+    font-size:clamp(16px,1.5vw,26px);
+    color:var(--muted);
+    font-weight:700;
   }
-
-  .line {
-    width: min(360px, 50vw);
-    height: 6px;
-    margin: 30px auto 0;
-    border-radius: 99px;
-    background: #17324d;
-    transform: scaleX(0);
-    animation: lineIn 5s infinite;
-  }
-
-  @keyframes titleIn {
-    0%   { opacity: 0; transform: translateY(18px); }
-    14%  { opacity: 1; transform: translateY(0); }
-    90%  { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-8px); }
-  }
-
-  @keyframes dateIn {
-    0%, 10% { opacity: 0; transform: scale(0.96); }
-    24%     { opacity: 1; transform: scale(1.03); }
-    32%     { opacity: 1; transform: scale(1); }
-    90%     { opacity: 1; transform: scale(1); }
-    100%    { opacity: 0; transform: scale(0.99); }
-  }
-
-  @keyframes lineIn {
-    0%, 18% { transform: scaleX(0); opacity: 0; }
-    32%     { transform: scaleX(1); opacity: 1; }
-    90%     { transform: scaleX(1); opacity: 1; }
-    100%    { transform: scaleX(0.9); opacity: 0; }
+  .logo{
+    position:absolute;
+    right:2.2vw;
+    bottom:2.4vh;
+    width:min(150px,14vw);
+    height:auto;
   }
 </style>
 </head>
-
 <body>
-  <div class="topbar"></div>
-
-  <div class="content">
-    <img
-      class="logo"
-      src="https://cdn-bloc.no/background/200000195/7987/2026/4/23/hl_logo.png"
-      alt="Hasle-Løren logo"
-    >
-
-    <div class="kiosk">KIOSKEN</div>
-
-    <h1>Kiosken åpner</h1>
-    <div class="date">7. september</div>
-    <div class="line"></div>
+<div class="screen">
+  <div class="panel">
+    <div class="headline" id="headline"></div>
+    <div class="clock" id="clock">00:00:00</div>
+    <div class="subtext" id="subtext"></div>
+    <div class="date" id="date"></div>
   </div>
+
+  <img class="logo" src="https://cdn-bloc.no/background/200000195/7987/2026/4/23/hl_logo.png" alt="Hasle-Løren">
+</div>
+
+<script>
+  const dayNames = ["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
+  const monthNames = ["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+
+  function getHoursForDay(day){
+    // 0 = søndag, 6 = lørdag
+    if (day >= 1 && day <= 5) return { open: "17:00", close: "21:00" };
+    return { open: "10:00", close: "18:00" };
+  }
+
+  function minutesFromTime(str){
+    const [h,m] = str.split(":").map(Number);
+    return h * 60 + m;
+  }
+
+  function format2(n){
+    return String(n).padStart(2, "0");
+  }
+
+  function updateScreen(){
+    const now = new Date();
+    const day = now.getDay();
+    const hrs = getHoursForDay(day);
+
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const openMinutes = minutesFromTime(hrs.open);
+    const closeMinutes = minutesFromTime(hrs.close);
+
+    const clock = document.getElementById("clock");
+    const headline = document.getElementById("headline");
+    const subtext = document.getElementById("subtext");
+    const date = document.getElementById("date");
+
+    clock.textContent = `${format2(now.getHours())}:${format2(now.getMinutes())}:${format2(now.getSeconds())}`;
+    date.textContent = `${dayNames[day]} ${now.getDate()}. ${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+
+    // Fra åpningstid til stengetid
+    if (currentMinutes >= openMinutes && currentMinutes < closeMinutes){
+      headline.textContent = "Kiosken er åpen";
+      subtext.textContent = "";
+    }
+    // Mellom stengetid og midnatt: bare klokke
+    else if (currentMinutes >= closeMinutes){
+      headline.textContent = "";
+      subtext.textContent = "";
+    }
+    // Når kiosken er stengt: vis neste åpning i dag
+    else{
+      headline.textContent = "";
+      subtext.textContent = `Kiosken åpner kl ${hrs.open}`;
+    }
+  }
+
+  updateScreen();
+  setInterval(updateScreen, 1000);
+</script>
 </body>
 </html>

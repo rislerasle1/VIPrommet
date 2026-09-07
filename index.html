@@ -1,95 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="no">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Hasle-Løren Infoskjerm</title>
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VIPrommet Infoskjerm</title>
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: white;
+    html,body{
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      background:#000;
     }
-
-    .slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      opacity: 0;
-      visibility: hidden;
+    .slide{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      opacity:0;
+      visibility:hidden;
     }
-
-    .slide.active {
-      opacity: 1;
-      visibility: visible;
+    .slide.active{
+      opacity:1;
+      visibility:visible;
     }
   </style>
 </head>
-
 <body>
-
-  <iframe class="slide active" id="side1"></iframe>
-
-  <iframe class="slide" id="side2"></iframe>
-
-  <iframe class="slide" id="side3"></iframe>
-
+  <iframe class="slide active" id="slide0"></iframe>
+  <iframe class="slide" id="slide1"></iframe>
+  <iframe class="slide" id="slide2"></iframe>
 
   <script>
-
-    // Én versjon per innlasting.
-    // Gjør at vi får ferskt innhold når siden oppdateres,
-    // men ikke henter data ved hver rotasjon.
     const version = Date.now();
 
-    document.getElementById("side1").src =
-      "side1.html?v=" + version;
+    const slides = [
+      { el: document.getElementById("slide0"), src: "side1.html?v=" + version, duration: 7000 },
+      { el: document.getElementById("slide1"), src: "side2.html?v=" + version, duration: 20000 },
+      { el: document.getElementById("slide2"), src: "side3.html?v=" + version, duration: 5000 }
+    ];
 
-    document.getElementById("side2").src =
-      "https://docs.google.com/spreadsheets/d/1u-Uobmn4ogPwt9qcqFG272O6tlxlRR_oZ2cjh2VpCYo/htmlview?v=" + version;
+    slides.forEach(slide => {
+      slide.el.src = slide.src;
+    });
 
-    document.getElementById("side3").src =
-      "side3.html?v=" + version;
+    let current = 0;
 
+    function showSlide(index){
+      slides.forEach((slide, i) => {
+        slide.el.classList.toggle("active", i === index);
+      });
+    }
 
-    // ROTASJON
-    const slides = document.querySelectorAll(".slide");
+    function rotate(){
+      const duration = slides[current].duration;
 
-    let currentSlide = 0;
+      setTimeout(() => {
+        current = (current + 1) % slides.length;
+        showSlide(current);
+        rotate();
+      }, duration);
+    }
 
-    setInterval(() => {
+    showSlide(0);
+    rotate();
 
-      slides[currentSlide].classList.remove("active");
-
-      currentSlide++;
-
-      if (currentSlide >= slides.length) {
-        currentSlide = 0;
-      }
-
-      slides[currentSlide].classList.add("active");
-
-    }, 5000);
-
-
-    // OPPDATER ALT HVER 30. MINUTT
+    // Last hele infoskjermen på nytt hvert 30. minutt
+    // Endre 1800000 til 3600000 hvis du vil oppdatere bare hver time.
     setTimeout(() => {
-
-      window.location.replace(
-        window.location.pathname + "?refresh=" + Date.now()
-      );
-
+      window.location.replace(window.location.pathname + "?refresh=" + Date.now());
     }, 1800000);
-
   </script>
-
 </body>
 </html>
