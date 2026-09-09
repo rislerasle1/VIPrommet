@@ -134,10 +134,10 @@ body{
 }
 .block h2::before{
   content:"";
-  width:10px;height:10px;border-radius:50%;
+  width:11px;height:11px;border-radius:50%;
   background:var(--red);
-  box-shadow:0 0 0 0 rgba(239,62,54,.35);
-  animation:pulse 2.8s infinite;
+  box-shadow:0 0 0 0 rgba(239,62,54,.55);
+  animation:pulse 1.4s ease-in-out infinite;
 }
 .item{
   display:grid;
@@ -145,6 +145,39 @@ body{
   gap:1vw;
   padding:.8vh 0;
   border-top:1px solid var(--soft);
+}
+.bestseller-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.3em;
+  margin-left:.55em;
+  vertical-align:middle;
+  padding:.28em .7em;
+  border-radius:999px;
+  background:linear-gradient(135deg,#ef3e36,#ff8a3d);
+  color:#fff;
+  font-weight:900;
+  font-size:clamp(9px,.75vw,14px);
+  letter-spacing:.04em;
+  white-space:nowrap;
+  box-shadow:0 4px 12px rgba(239,62,54,.4);
+  transform-origin:center;
+  animation:bsWiggle 2.6s ease-in-out infinite;
+}
+.bestseller-badge .spark{
+  display:inline-block;
+  animation:bsSpin 2.2s linear infinite;
+}
+@keyframes bsWiggle{
+  0%,100%{transform:rotate(-3deg) scale(1)}
+  25%{transform:rotate(2deg) scale(1.06)}
+  50%{transform:rotate(-1deg) scale(1.02)}
+  75%{transform:rotate(3deg) scale(1.06)}
+}
+@keyframes bsSpin{
+  0%{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(180deg) scale(1.25)}
+  100%{transform:rotate(360deg) scale(1)}
 }
 .item:first-of-type{border-top:0}
 .name{
@@ -170,9 +203,49 @@ body{
 @keyframes blockIn{
   to{opacity:1;transform:none}
 }
+.floaters{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+.floaters span{
+  position:absolute;
+  bottom:-10%;
+  font-size:2.2vw;
+  opacity:0;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  0%{
+    transform:translateY(0) rotate(0deg);
+    opacity:0;
+  }
+  10%{opacity:.55}
+  85%{opacity:.4}
+  100%{
+    transform:translateY(-115vh) rotate(25deg);
+    opacity:0;
+  }
+}
 @keyframes pulse{
-  0%,70%,100%{box-shadow:0 0 0 0 rgba(239,62,54,.25)}
-  82%{box-shadow:0 0 0 8px rgba(239,62,54,0)}
+  0%,100%{
+    box-shadow:0 0 0 0 rgba(239,62,54,.65);
+    transform:translateX(0) scale(1);
+  }
+  25%{
+    box-shadow:0 0 0 5px rgba(239,62,54,.2);
+    transform:translateX(3px) scale(1.2);
+  }
+  50%{
+    box-shadow:0 0 0 10px rgba(239,62,54,0);
+    transform:translateX(-3px) scale(1.1);
+  }
+  75%{
+    box-shadow:0 0 0 5px rgba(239,62,54,.2);
+    transform:translateX(2px) scale(1.15);
+  }
 }
 @keyframes sweep{
   0%,15%{transform:translateX(-100%)}
@@ -191,6 +264,15 @@ body{
 <body>
 <main class="screen">
   <aside class="side">
+    <div class="floaters">
+      <span style="left:6%;font-size:1.8vw;animation-duration:11s;animation-delay:0s">🏒</span>
+      <span style="left:18%;font-size:2.4vw;animation-duration:14s;animation-delay:2s">🧇</span>
+      <span style="left:32%;font-size:1.6vw;animation-duration:9s;animation-delay:4s">🥅</span>
+      <span style="left:48%;font-size:2.1vw;animation-duration:13s;animation-delay:1s">☕</span>
+      <span style="left:62%;font-size:1.9vw;animation-duration:10s;animation-delay:5s">🌭</span>
+      <span style="left:76%;font-size:2.3vw;animation-duration:15s;animation-delay:3s">🏒</span>
+      <span style="left:88%;font-size:1.7vw;animation-duration:12s;animation-delay:6s">🍫</span>
+    </div>
     <div class="kicker">HASLE-LØREN</div>
     <h1>KIOSK<br>MENY</h1>
     <p>Noe varmt, noe kaldt og litt godt mellom øktene.</p>
@@ -201,7 +283,7 @@ body{
 
   <section class="content">
     <div class="topline">
-      <div class="big">Priser</div>
+      <div class="big">Meny</div>
       <div class="small">Utvalg kan variere</div>
     </div>
 
@@ -209,29 +291,30 @@ body{
       <section class="block">
         <h2>Drikke</h2>
         <div class="item">
-          <div class="name">Brus 0,5 l</div><div class="price">35,-</div>
-          <div class="desc">Cola, Fanta, Urge, Farris Bris</div>
+          <div class="name">Brus 0,5 l</div><div class="price">40,-</div>
+          <div class="desc">Pepsi Max, Solo, Bris, mm</div>
         </div>
         <div class="item">
-          <div class="name">Kaffekort 10 klipp</div><div class="price">150,-</div>
+          <div class="name">Kaffekort 10 klipp <span class="bestseller-badge"><span class="spark">☕</span>Lifesaver</span></div><div class="price">200,-</div>
         </div>
         <div class="item">
-          <div class="name">Varm drikke</div><div class="price">20,-</div>
-          <div class="desc">Kaffe, te eller sjokoladedrikk</div>
+          <div class="name">Varm drikke</div><div class="price">25,-</div>
+          <div class="desc">Te, kakao eller kaffe</div>
         </div>
         <div class="item">
-          <div class="name">Kjeft</div><div class="price">20,-</div>
+          <div class="name">Solrik</div><div class="price">20,-</div>
+          <div class="desc">Appelsin/jordbær</div>
         </div>
       </section>
 
       <section class="block">
         <h2>Varm mat</h2>
         <div class="item">
-          <div class="name">Toast</div><div class="price">30,-</div>
+          <div class="name">Toast <span class="bestseller-badge"><span class="spark">⭐</span>Bestselger</span></div><div class="price">30,-</div>
           <div class="desc">Ost og skinke</div>
         </div>
         <div class="item">
-          <div class="name">Pølse</div><div class="price">35,-</div>
+          <div class="name">Pølse <span class="bestseller-badge"><span class="spark">🌭</span>Matchwiener</span></div><div class="price">35,-</div>
           <div class="desc">Med brød eller lompe</div>
         </div>
       </section>
@@ -247,7 +330,7 @@ body{
           <div class="desc">Sjokolade, müsli eller karamell</div>
         </div>
         <div class="item">
-          <div class="name">Vaffel</div><div class="price">25,-</div>
+          <div class="name">Vaffel <span class="bestseller-badge"><span class="spark">💪</span>Motivator</span></div><div class="price">25,-</div>
         </div>
       </section>
 
@@ -257,11 +340,11 @@ body{
           <div class="name">Pringles</div><div class="price">25,-</div>
         </div>
         <div class="item">
-          <div class="name">Sjokolade</div><div class="price">25,-</div>
+          <div class="name">Sjokolade</div><div class="price">30,-</div>
           <div class="desc">Snickers, Melkerull eller Kvikk Lunsj</div>
         </div>
         <div class="item">
-          <div class="name">Kjærlighet på pinne</div><div class="price">10,-</div>
+          <div class="name">Slikkepinne <span class="bestseller-badge"><span class="spark">💕</span>Love is in the air</span></div><div class="price">10,-</div>
         </div>
       </section>
     </div>
