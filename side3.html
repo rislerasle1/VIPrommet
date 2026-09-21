@@ -66,9 +66,42 @@
   <div class="screen">
     <div class="box">
       <div class="label">KIOSKVERTER</div>
-      <h1>Hasle-Løren U10</h1>
-      <div class="sub">Takk for innsatsen!</div>
+      <h1>Hasle-Løren <span id="team">U10</span></h1>
+      <div class="sub" id="subtext">Takk for innsatsen!</div>
     </div>
   </div>
+
+<script>
+  // Datoperiodene er satt til inneværende år (2026)
+  const year = new Date().getFullYear();
+
+  const periods = [
+    { start: new Date(year, 8, 21), end: new Date(year, 8, 28), team: "U11", born: "2016" },
+    { start: new Date(year, 8, 29), end: new Date(year, 9, 5),  team: "U12", born: "2015" },
+    { start: new Date(year, 9, 6),  end: new Date(year, 9, 10), team: "U13", born: "2014" },
+    { start: new Date(year, 9, 11), end: new Date(year, 9, 22), team: "U14", born: "2013" },
+    { start: new Date(year, 9, 23), end: null,                  team: "U15", born: "2012" }
+  ];
+
+  function startOfDay(d){
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  }
+
+  function getCurrentPeriod(){
+    const today = startOfDay(new Date());
+    for (const p of periods){
+      const start = startOfDay(p.start);
+      const end = p.end ? startOfDay(p.end) : null;
+      if (today >= start && (end === null || today <= end)){
+        return p;
+      }
+    }
+    // Fallback: før første periode -> vis første lag
+    return periods[0];
+  }
+
+  const current = getCurrentPeriod();
+  document.getElementById("team").textContent = `${current.team} (${current.born})`;
+</script>
 </body>
 </html>
